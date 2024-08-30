@@ -29,7 +29,7 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
 
    <p>
      <a href="https://github.com/NutonFlash/iotdb-client-server">
-       <img src="https://github-readme-stats.vercel.app/api/pin/?username=NutonFlash&repo=iotdb-client-server&theme=default_repocard" alt="IoTDB Client Server">
+       <img src="https://github-readme-stats.vercel.app/api/pin/?username=NutonFlash&repo=iotdb-client-server&theme=default_repocard&cache_seconds=86400" alt="IoTDB Client Server">
      </a>
    </p>
 
