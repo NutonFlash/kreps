@@ -1,6 +1,6 @@
 # KREPS Home Repository
 
-<p align="center">
+<p align="left">
   <img src="https://github.com/NutonFlash/kreps/blob/main/kreps-logo-no-bg.png" alt="KREPS Logo" width="200"/>
 </p>
 
