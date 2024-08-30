@@ -11,7 +11,7 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
 ## Projects
 
 ### InfluxDB Related
-
+s
 1. **InfluxDB Benchmark**: A toolkit designed to test InfluxDB performance. It includes three modules:
    - **Data Generator**: Creates and dispatches mock data for benchmarking InfluxDB.
    - **Node.js Express Server**: Receives and processes data, writing it into InfluxDB.
