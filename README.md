@@ -25,7 +25,7 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
 
 ### IoTDB Related
 
-1. **IoTDB Client Server**: A comprehensive solution that includes scripts for reading/writing data to IoTDB, as well as WebSocket, Spring, and RPC servers to handle client requests, manage IoTDB interactions, and facilitate data transfer.
+1. **IoTDB Client-Server**: A comprehensive solution that includes scripts for reading/writing data to IoTDB, as well as WebSocket, Spring, and RPC servers to handle client requests, manage IoTDB interactions, and facilitate data transfer.
 
    <p>
      <a href="https://github.com/NutonFlash/iotdb-client-server">
@@ -33,7 +33,7 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
      </a>
    </p>
 
-2. **IoTDB Redis Connector**: This repository contains tools for integrating Redis with IoTDB. It includes a project for generating real-time data and writing it to Redis, and another project for reading data from Redis and writing it to IoTDB using Spark.
+2. **IoTDB-Redis Connector**: This repository contains tools for integrating Redis with IoTDB. It includes a project for generating real-time data and writing it to Redis, and another project for reading data from Redis and writing it to IoTDB using Spark.
 
    <p>
      <a href="https://github.com/NutonFlash/iotdb-redis-connector">
@@ -41,10 +41,18 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
      </a>
    </p>
 
-3. **IoTDB Hadoop Connector**: Facilitates data migration between IoTDB and HDFS. This project includes scripts to read data from IoTDB and write it to HDFS, as well as the reverse process of reading data from HDFS and writing it back to IoTDB.
+3. **IoTDB-Hadoop Connector**: Facilitates data migration between IoTDB and HDFS. This project includes scripts to read data from IoTDB and write it to HDFS, as well as the reverse process of reading data from HDFS and writing it back to IoTDB.
 
    <p>
      <a href="https://github.com/NutonFlash/iotdb-hadoop-connector">
        <img src="https://github-readme-stats.vercel.app/api/pin/?username=NutonFlash&repo=iotdb-hadoop-connector&theme=default_repocard" alt="IoTDB Hadoop Connector">
      </a>
    </p>
+
+4. **IoTDB - OPC Server Connector**: This repository simulates data flow from a PLC to an OPC UA server and then stores it in IoTDB.
+
+   <p>
+     <a href="https://github.com/NutonFlash/iotdb-hadoop-connector">
+       <img src="https://github-readme-stats.vercel.app/api/pin/?username=NutonFlash&repo=iotdb-opc-connector&theme=default_repocard" alt="IoTDB OPC Server Connector">
+     </a>
+   </p>   
