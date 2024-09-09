@@ -49,10 +49,10 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
      </a>
    </p>
 
-4. **IoTDB - OPC Server Connector**: This repository simulates data flow from a PLC to an OPC UA server and then stores it in IoTDB.
+4. **IoTDB - OPC Server Connector**: This repository simulates the process of generating data from a PLC, sending it to an OPC UA server, and then storing it in IoTDB. It includes functionality for data generation, real-time updates, and storing the resulting data points in a time-series database.
 
    <p>
-     <a href="https://github.com/NutonFlash/iotdb-hadoop-connector">
+     <a href="https://github.com/NutonFlash/iotdb-opc-connector">
        <img src="https://github-readme-stats.vercel.app/api/pin/?username=NutonFlash&repo=iotdb-opc-connector&theme=default_repocard" alt="IoTDB OPC Server Connector">
      </a>
    </p>   
