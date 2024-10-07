@@ -1,572 +1,498 @@
+# 오프라인 Linux 서버에서 Apache IoTDB 1.3.2에 대한 포괄적인 설치 가이드
 
-# 오프라인 리눅스 서버에 Apache IoTDB 1.3.2 설치 가이드
-
-이 가이드는 인터넷이 없는 클린 리눅스 서버에서 **Apache IoTDB 1.3.2** (싱글 노드 및 클러스터 설정)을 설치하고 구성하는 단계별 지침을 제공합니다. 필요한 모든 도구와 바이너리는 미리 다운로드한 후 USB를 통해 서버에 전송하여 설치해야 합니다.
+이 가이드는 인터넷 접속이 없는 깨끗한 Linux 서버에 **Apache IoTDB 1.3.2**(단일 노드 및 클러스터 설정 모두)를 설치하고 구성하는 단계별 지침을 제공합니다. 모든 필수 도구와 바이너리는 미리 다운로드하고 USB를 통해 전송한 다음 대상 서버에 설치해야 합니다.
 
 ## 목차
 
-1. [필수 요구 사항](#필수-요구-사항)
-2. [필요한 도구 및 바이너리](#필요한-도구-및-바이너리)
-3. [USB 드라이브 준비](#usb-드라이브-준비)
-4. [설치 단계](#설치-단계)
-   1. [Java 실행 환경(JRE) 8 설치](#1-java-실행-환경jre-8-설치)
-      - [a. JRE를 대상 서버로 전송](#a-jre를-대상-서버로-전송)
-      - [b. JRE 설치](#b-jre-설치)
-   2. [추가 도구 설치](#2-추가-도구-설치)
-      - [a. 추가 도구를 대상 서버로 전송](#a-추가-도구를-대상-서버로-전송)
-      - [b. 추가 도구 설치](#b-추가-도구-설치)
-   3. [Apache IoTDB 설치](#3-apache-iotdb-설치)
-      - [a. IoTDB 패키지 전송](#a-iotdb-패키지-전송)
-      - [b. IoTDB 설치](#b-iotdb-설치)
-   4. [싱글 노드 IoTDB 구성 및 실행](#4-싱글-노드-iotdb-구성-및-실행)
-      - [a. 싱글 노드 구성](#a-싱글-노드-구성)
-      - [b. IoTDB 싱글 노드 실행](#b-iotdb-싱글-노드-실행)
-   5. [IoTDB 클러스터 구성 및 실행](#5-iotdb-클러스터-구성-및-실행)
-      - [a. 클러스터 구성](#a-클러스터-구성)
-      - [b. IoTDB 클러스터 실행](#b-iotdb-클러스터-실행)
-5. [설치 후 검증](#설치-후-검증)
-6. [문제 해결](#문제-해결)
-7. [부록](#부록)
-   - [A. 샘플 구성 파일](#a-샘플-구성-파일)
-   - [B. 유용한 명령어](#b-유용한-명령어)
-   - [C. 참고 문헌](#c-참고-문헌)
+1. [필수 구성 요소](#prerequisites)
+2. [필수 도구 및 바이너리](#required-tools-and-binaries)
+3. [USB 드라이브 준비](#preparing-the-usb-drive)
+4. [설치 단계](#installation-steps)
+5. [Java Runtime Environment(JRE) 8 설치](#1-install-java-runtime-environment-jre-8)
 
----
+- [a. JRE를 대상 서버로 전송](#a-transfer-jre-to-target-server)
+- [b. JRE 설치](#b-install-jre)
 
-## 필수 요구 사항
+2. [추가 도구 설치](#2-install-additional-tools)
 
-- **리눅스 서버**: 깨끗한 리눅스 운영체제가 설치된 물리적 서버 (예: 우분투, CentOS).
-- **USB 드라이브**: 필요한 모든 설치 파일과 도구를 저장할 충분한 용량.
-- **접근 권한**: 모든 대상 서버에서 루트 또는 sudo 접근 권한.
-- **네트워크 구성**: 클러스터 설정을 위해 서버 간의 네트워크 통신이 가능해야 합니다.
+- [a. 추가 도구를 대상 서버로 전송](#a-transfer-additional-tools-to-target-server)
+- [b. 추가 도구 설치](#b-install-additional-tools)
 
-## 필요한 도구 및 바이너리
+3. [Apache IoTDB 설치](#3-install-apache-iotdb)
 
-1. **Java 실행 환경 (JRE) 8**
-   
-   - **버전**: JRE 8
-   - **다운로드**: [Oracle JRE 8 다운로드](https://www.oracle.com/java/technologies/downloads/?er=221886#license-lightbox)
+- [a. IoTDB 패키지 전송](#a-transfer-iotdb-package)
+- [b. IoTDB 설치](#b-install-iotdb)
+
+4. [단일 노드 IoTDB 구성 및 시작](#4-configure-and-launch-single-node-iotdb)
+
+- [a. 단일 노드 구성](#a-single-node-configuration)
+- [b. IoTDB 단일 노드 시작](#b-launch-iotdb-single-node)
+
+5. [IoTDB 클러스터 구성 및 시작](#5-configure-and-launch-iotdb-cluster)
+
+- [a. 클러스터 구성](#a-cluster-configuration)
+- [b. IoTDB 클러스터 시작](#b-launch-iotdb-cluster)
+
+5. [설치 후 검증](#post-installation-verification)
+6. [문제 해결](#troubleshooting)
+7. [Apache IoTDB 공식 배포 가이드](#apache-iotdb-official-deployment-guide)
+
+## 필수 조건
+
+- **Linux 서버**: 깨끗한 Linux OS가 설치된 실제 서버(예: Ubuntu, CentOS).
+- **USB 드라이브**: 필요한 모든 설치 파일과 도구를 보관할 수 있는 충분한 저장 용량.
+- **액세스 자격 증명**: 모든 대상 서버에서 루트 또는 sudo 액세스.
+- **네트워크 구성**: 클러스터 설정을 위해 서버가 네트워크를 통해 서로 통신할 수 있는지 확인합니다.
+
+## 필수 도구 및 바이너리
+
+1. **Java Runtime Environment(JRE) 8**
+
+- **버전**: JRE 8
+- **다운로드**: [Oracle JRE 8 다운로드](https://www.oracle.com/java/technologies/downloads/?er=221886#license-lightbox)
 
 2. **Apache IoTDB 1.3.2**
-   
-   - **버전**: Apache IoTDB 1.3.2
-   - **다운로드**: [Apache IoTDB 1.3.2 바이너리](https://www.apache.org/dyn/closer.cgi/iotdb/1.3.2/apache-iotdb-1.3.2-all-bin.zip)
+
+- **버전**: Apache IoTDB 1.3.2
+- **다운로드**: [Apache IoTDB 1.3.2 바이너리](https://www.apache.org/dyn/closer.cgi/iotdb/1.3.2/apache-iotdb-1.3.2-all-bin.zip)
 
 3. **추가 도구**
-   
-   - **SSH 서버 및 클라이언트**: 클러스터 통신용
-   - **Unzip 유틸리티**: 압축 파일을 풀기 위한 도구
-   - **텍스트 편집기**: Nano
+
+- **SSH 서버 및 클라이언트**: 클러스터 통신용
+- **압축 해제 유틸리티**: 압축 파일 추출용
+- **텍스트 편집기**: Nano
 
 4. **Java 스크립트**
-   
-   - IoTDB 작업을 위해 개발된 모든 커스텀 Java 스크립트.
+
+- IoTDB 작업을 위해 개발된 모든 사용자 지정 Java 스크립트.
 
 ## USB 드라이브 준비
 
-1. **디렉토리 구조 생성**:
+1. **디렉토리 구조 만들기**:
 
-    ```bash
-    mkdir -p USB_Install/{jre,iotdb,scripts,tools,additional_tools}
-    ```
+```bash
+mkdir -p USB_Install/{jre,iotdb,scripts,tools,additional_tools}
+```
 
 2. **바이너리 및 도구 다운로드**:
 
-    - **JRE 8**: 적절한 JRE 8 tarball 또는 설치 프로그램을 다운로드하여 `USB_Install/jre/`에 저장합니다.
-    - **Apache IoTDB 1.3.2**:
-      - `apache-iotdb-1.3.2-all-bin.zip` 파일을 다운로드하여 `USB_Install/iotdb/`에 저장합니다.
-    - **추가 도구**:
-      - SSH 서버 및 클라이언트 패키지, Unzip 유틸리티, 및 기타 필요한 도구를 다운로드하고 이들의 바이너리를 `USB_Install/additional_tools/`에 저장합니다.
-    - **Java 스크립트**: 모든 커스텀 Java 스크립트를 `USB_Install/scripts/`에 저장합니다.
+- **JRE 8**: 적절한 JRE 8 tarball 또는 설치 프로그램을 다운로드하여 `USB_Install/jre/`에 넣습니다.
+- **Apache IoTDB 1.3.2**:
+- `apache-iotdb-1.3.2-all-bin.zip` 파일을 다운로드하여 `USB_Install/iotdb/`에 넣습니다.
+- **추가 도구**:
+- SSH 서버 및 클라이언트 패키지, 압축 해제 유틸리티 및 기타 필요한 도구를 다운로드합니다. 바이너리를 `USB_Install/additional_tools/`에 넣습니다.
+- **Java 스크립트**: 모든 사용자 지정 Java 스크립트를 `USB_Install/scripts/`에 넣습니다.
 
 3. **다운로드 확인**: 모든 파일이 올바르게 다운로드되었고 손상되지 않았는지 확인합니다.
 
-4. **USB 안전하게 제거**: 모든 파일을 복사한 후 데이터 손상을 방지하기 위해 USB 드라이브를 안전하게 제거합니다.
-# Comprehensive Installation Guide for Apache IoTDB 1.3.2 on Offline Linux Servers
+4. **USB 안전하게 꺼내기**: 모든 파일이 복사되면 USB 드라이브를 안전하게 꺼내 데이터 손상을 방지합니다.
 
-This guide provides step-by-step instructions to install and configure **Apache IoTDB 1.3.2** (both Single-Node and Cluster setups) on clean Linux servers without internet access. All necessary tools and binaries should be downloaded beforehand, transferred via USB, and installed on the target servers.
+## 설치 단계
 
-## Table of Contents
+### 1. Java Runtime Environment(JRE) 8 설치
 
-1. [Prerequisites](#prerequisites)
-2. [Required Tools and Binaries](#required-tools-and-binaries)
-3. [Preparing the USB Drive](#preparing-the-usb-drive)
-4. [Installation Steps](#installation-steps)
-   1. [Install Java Runtime Environment (JRE) 8](#1-install-java-runtime-environment-jre-8)
-      - [a. Transfer JRE to Target Server](#a-transfer-jre-to-target-server)
-      - [b. Install JRE](#b-install-jre)
-   2. [Install Additional Tools](#2-install-additional-tools)
-      - [a. Transfer Additional Tools to Target Server](#a-transfer-additional-tools-to-target-server)
-      - [b. Install Additional Tools](#b-install-additional-tools)
-   3. [Install Apache IoTDB](#3-install-apache-iotdb)
-      - [a. Transfer IoTDB Package](#a-transfer-iotdb-package)
-      - [b. Install IoTDB](#b-install-iotdb)
-   4. [Configure and Launch Single-Node IoTDB](#4-configure-and-launch-single-node-iotdb)
-      - [a. Single-Node Configuration](#a-single-node-configuration)
-      - [b. Launch IoTDB Single-Node](#b-launch-iotdb-single-node)
-   5. [Configure and Launch IoTDB Cluster](#5-configure-and-launch-iotdb-cluster)
-      - [a. Cluster Configuration](#a-cluster-configuration)
-      - [b. Launch IoTDB Cluster](#b-launch-iotdb-cluster)
-5. [Post-Installation Verification](#post-installation-verification)
-6. [Troubleshooting](#troubleshooting)
-7. [Apache IoTDB Official Deployment Guide](#apache-iotdb-official-deployment-guide)
+#### a. JRE를 대상 서버로 전송
 
-## Prerequisites
+1. **USB를 대상 Linux 서버에 삽입**합니다.
+2. **USB 마운트**(자동으로 마운트되지 않은 경우):
 
-- **Linux Servers**: Physical servers with a clean Linux OS installed (e.g., Ubuntu, CentOS).
-- **USB Drive**: Sufficient storage capacity to hold all necessary installation files and tools.
-- **Access Credentials**: Root or sudo access on all target servers.
-- **Network Configuration**: Ensure that servers can communicate with each other over the network for cluster setup.
+```bash
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdX1 /mnt/usb # sdX1을 실제 장치 식별자로 바꿉니다.
+```
 
-## Required Tools and Binaries
+3. **JRE 패키지 복사**:
 
-1. **Java Runtime Environment (JRE) 8**
+```bash
+cp /mnt/usb/USB_Install/jre/jre-8uXXX-linux-x64.tar.gz /opt/
+```
 
-   - **Version**: JRE 8
-   - **Download**: [Oracle JRE 8 Downloads](https://www.oracle.com/java/technologies/downloads/?er=221886#license-lightbox)
+_`jre-8uXXX-linux-x64.tar.gz`를 실제 JRE 8 파일 이름으로 바꿉니다._
 
-2. **Apache IoTDB 1.3.2**
+#### b. JRE 설치
 
-   - **Version**: Apache IoTDB 1.3.2
-   - **Download**: [Apache IoTDB 1.3.2 Binary](https://www.apache.org/dyn/closer.cgi/iotdb/1.3.2/apache-iotdb-1.3.2-all-bin.zip)
+1. **JRE 추출**:
 
-3. **Additional Tools**
+```bash
+cd /opt/
+sudo tar -xzf jre-8uXXX-linux-x64.tar.gz
+```
 
-   - **SSH Server and Client**: For cluster communication
-   - **Unzip Utility**: To extract compressed files
-   - **Text Editor**: Nano
+2. **환경 변수 설정**:
 
-4. **Java Scripts**
+- 텍스트 편집기로 `/etc/profile`을 엽니다.
 
-   - Any custom Java scripts developed for IoTDB operations.
+```bash
+sudo nano /etc/profile
+```
 
-## Preparing the USB Drive
+- 마지막에 다음 줄을 추가합니다.
 
-1. **Create Directory Structure**:
+```bash
+export JAVA_HOME=/opt/jre1.8.0_XXX
+export PATH=$PATH:$JAVA_HOME/bin
+```
 
-   ```bash
-   mkdir -p USB_Install/{jre,iotdb,scripts,tools,additional_tools}
-   ```
+_`jre1.8.0_XXX`를 실제 JRE 디렉터리 이름으로 바꿉니다._
 
-2. **Download Binaries and Tools**:
+- 편집기를 저장하고 종료합니다.
 
-   - **JRE 8**: Download the appropriate JRE 8 tarball or installer and place it in `USB_Install/jre/`.
-   - **Apache IoTDB 1.3.2**:
-     - Download the `apache-iotdb-1.3.2-all-bin.zip` file and place it in `USB_Install/iotdb/`.
-   - **Additional Tools**:
-     - Download SSH server and client packages, unzip utility, and any other required tools. Place their binaries in `USB_Install/additional_tools/`.
-   - **Java Scripts**: Place all custom Java scripts in `USB_Install/scripts/`.
+3. **변경 사항 적용**:
 
-3. **Verify Downloads**: Ensure all files are correctly downloaded and not corrupted.
+```bash
+source /etc/profile
+```
 
-4. **Safely Eject USB**: Once all files are copied, safely eject the USB drive to prevent data corruption.
+4. **설치 확인**:
 
-## Installation Steps
+```bash
+java -version
+```
 
-### 1. Install Java Runtime Environment (JRE) 8
+_예상 출력_: JRE 8을 나타내는 Java 버전 정보.
 
-#### a. Transfer JRE to Target Server
+### 2. 추가 도구 설치
 
-1. **Insert USB** into the target Linux server.
-2. **Mount USB** (if not auto-mounted):
+#### a. 추가 도구를 대상 서버로 전송
 
-   ```bash
-   sudo mkdir -p /mnt/usb
-   sudo mount /dev/sdX1 /mnt/usb  # Replace sdX1 with actual device identifier
-   ```
+1. **위에서 설명한 대로 USB가 마운트되었는지 확인합니다.**
+2. **추가 도구 패키지 복사**:
 
-3. **Copy JRE Package**:
+```bash
+cp /mnt/usb/USB_Install/additional_tools/ssh-server.deb /opt/
+cp /mnt/usb/USB_Install/additional_tools/unzip.deb /opt/
+cp /mnt/usb/USB_Install/additional_tools/nano.deb /opt/
+```
 
-   ```bash
-   cp /mnt/usb/USB_Install/jre/jre-8uXXX-linux-x64.tar.gz /opt/
-   ```
+#### b. 추가 도구 설치
 
-   _Replace `jre-8uXXX-linux-x64.tar.gz` with the actual JRE 8 filename._
+1. **SSH 서버 및 클라이언트 설치**:
 
-#### b. Install JRE
+```bash
+sudo dpkg -i /opt/ssh-server.deb
+```
 
-1. **Extract JRE**:
+2. **압축 해제 유틸리티 설치**:
 
-   ```bash
-   cd /opt/
-   sudo tar -xzf jre-8uXXX-linux-x64.tar.gz
-   ```
+```bash
+sudo dpkg -i /opt/unzip.deb
+```
 
-2. **Set Environment Variables**:
+3. **텍스트 편집기(나노) 설치**:
 
-   - Open `/etc/profile` with a text editor:
+```bash
+sudo dpkg -i /opt/nano.deb
+```
 
-     ```bash
-     sudo nano /etc/profile
-     ```
+4. **SSH 서비스 활성화 및 시작**:
 
-   - Add the following lines at the end:
+```bash
+sudo systemctl enable ssh
+sudo systemctl start ssh
+```
 
-     ```bash
-     export JAVA_HOME=/opt/jre1.8.0_XXX
-     export PATH=$PATH:$JAVA_HOME/bin
-     ```
+5. **설치 확인**:
 
-     _Replace `jre1.8.0_XXX` with the actual JRE directory name._
+```bash
+ssh -V
+unzip -v
+nano --version
+```
 
-   - Save and exit the editor.
+### 3. Apache IoTDB 설치
 
-3. **Apply Changes**:
+#### a. IoTDB 패키지 전송
 
-   ```bash
-   source /etc/profile
-   ```
+1. **IoTDB 패키지 복사**:
 
-4. **Verify Installation**:
+```bash
+cp /mnt/usb/USB_Install/iotdb/apache-iotdb-1.3.2-all-bin.zip /opt/
+```
 
-   ```bash
-   java -version
-   ```
+#### b. IoTDB 설치
 
-   _Expected Output_: Java version information indicating JRE 8.
+1. **IoTDB 추출**:
 
-### 2. Install Additional Tools
+```bash
+cd /opt/
+sudo unzip apache-iotdb-1.3.2-all-bin.zip
+```
 
-#### a. Transfer Additional Tools to Target Server
+2. **IoTDB 환경 변수 설정**(선택 사항이지만 권장):
 
-1. **Ensure the USB is mounted as described above.**
-2. **Copy additional tools packages**:
+- `/etc/profile`을 엽니다.
 
-   ```bash
-   cp /mnt/usb/USB_Install/additional_tools/ssh-server.deb /opt/
-   cp /mnt/usb/USB_Install/additional_tools/unzip.deb /opt/
-   cp /mnt/usb/USB_Install/additional_tools/nano.deb /opt/
-   ```
+```bash
+sudo nano /etc/profile
+```
 
-#### b. Install Additional Tools
+- 다음을 추가합니다.
 
-1. **Install SSH Server and Client**:
+```bash
+export IOTDB_HOME=/opt/apache-iotdb-1.3.2
+export PATH=$PATH:$IOTDB_HOME/bin
+```
 
-   ```bash
-   sudo dpkg -i /opt/ssh-server.deb
-   ```
+- 저장하고 종료합니다.
 
-2. **Install Unzip Utility**:
+- 변경 사항 적용:
 
-   ```bash
-   sudo dpkg -i /opt/unzip.deb
-   ```
+```bash
+source /etc/profile
+```
 
-3. **Install Text Editor (Nano)**:
+### 4. 단일 노드 IoTDB 구성 및 시작
 
-   ```bash
-   sudo dpkg -i /opt/nano.deb
-   ```
+#### a. 단일 노드 구성
 
-4. **Enable and Start SSH Service**:
+1. **IoTDB 구성 디렉토리로 이동**:
 
-   ```bash
-   sudo systemctl enable ssh
-   sudo systemctl start ssh
-   ```
+```bash
+cd $IOTDB_HOME/conf/
+```
 
-5. **Verify Installation**:
+2. **공통 구성 편집**:
 
-   ```bash
-   ssh -V
-   unzip -v
-   nano --version
-   ```
+```bash
+sudo nano iotdb-common.properties
+set cluster_name=defaultCluster
+set schema_replication_factor=<number> // 예를 들어 3
+set data_replication_factor=<number> // 예를 들어 2
+종료하고 파일 저장
+```
 
-### 3. Install Apache IoTDB
+3. **ConfigNode에 대한 메모리 할당 설정**:
 
-#### a. Transfer IoTDB Package
+```bash
+sudo nano confignode-env.sh
+set MEMORY_SIZE='your value'
+종료하고 파일 저장
+```
 
-1. **Copy IoTDB Package**:
+4. **DataNode에 대한 메모리 할당 설정**:
 
-   ```bash
-   cp /mnt/usb/USB_Install/iotdb/apache-iotdb-1.3.2-all-bin.zip /opt/
-   ```
+```bash
+sudo nano datanode-env.sh
+set MEMORY_SIZE='your value'
+종료하고 파일 저장
+```
 
-#### b. Install IoTDB
+5. **ConfigNode 구성 편집**:
 
-1. **Extract IoTDB**:
+```bash
+sudo nano iotdb-confignode.properties
+set cn_internal_address=<머신의 이름/IP> // 예를 들어 node-1 중 하나
+set cn_seed_config_node=<머신의 이름/IP>:<10710> // 예를 들어 node-1:10710
+종료하고 파일 저장
+```
 
-   ```bash
-   cd /opt/
-   sudo unzip apache-iotdb-1.3.2-all-bin.zip
-   ```
+6. **DataNode 구성 편집**:
 
-2. **Set IoTDB Environment Variables** (optional but recommended):
+```bash
+sudo nano iotdb-datanode.properties
+set dn_rpc_address=0.0.0.0
+set dn_internal_address=<머신의 이름/IP> // 예를 들어 node-1 중 하나
+set dn_seed_config_node=<머신의 이름/IP>:<10710> // 예를 들어 node-1:10710
+종료하고 파일 저장
+```
 
-   - Open `/etc/profile`:
+#### b. IoTDB 단일 노드 시작
 
-     ```bash
-     sudo nano /etc/profile
-     ```
+1. **IoTDB 시작**:
 
-   - Add:
+```bash
+./$IOTDB_HOME/sbin/start-standalone.sh
+```
 
-     ```bash
-     export IOTDB_HOME=/opt/apache-iotdb-1.3.2
-     export PATH=$PATH:$IOTDB_HOME/bin
-     ```
+2. **IoTDB 요구 사항 충족 확인**:
 
-   - Save and exit.
+```bash
+./$IOTDB_HOME/sbin/health_check.sh -ips <node-1>
+```
 
-   - Apply changes:
+3. **IoTDB CLI 액세스**:
 
-     ```bash
-     source /etc/profile
-     ```
+```bash
+./$IOTDB_HOME/sbin/start-cli.sh
+```
 
-### 4. Configure and Launch Single-Node IoTDB
+_참고_: `exit`를 사용하여 CLI를 종료합니다.
 
-#### a. Single-Node Configuration
+### 5. IoTDB 클러스터 구성 및 시작
 
-1. **Navigate to IoTDB Configuration Directory**:
+#### a. 클러스터 구성
 
-   ```bash
-   cd $IOTDB_HOME/conf/
-   ```
+1. **IoTDB 구성 디렉토리로 이동**:
 
-2. **Edit Common Configuration**:
+```bash
+cd $IOTDB_HOME/conf/
+```
 
-   ```bash
-   sudo nano iotdb-common.properties
-   set cluster_name=defaultCluster
-   set schema_replication_factor=<number> // for example, 3
-   set data_replication_factor=<number> // for example, 2
-   exit and save file
-   ```
+2. **클러스터 구성 편집**":
 
-3. **Set Memory Allocation for ConfigNode**:
+```bash
+sudo nano iotdb-cluster.properties
+set confignode_address_list=<구성 노드 목록> // 예를 들어, node-1, node-2, node-3
+set datanode_address_list=<데이터 노드 목록> // 예를 들어, node-1, node-2, node-3
+set confignode_deploy_path=<iotdb/data 경로> // 예를 들어, /opt/iotdb/data
+set datanode_deploy_path=<iotdb/data 경로> // 예를 들어, /opt/iotdb/data
+종료하고 파일 저장
+```
 
-   ```bash
-   sudo nano confignode-env.sh
-   set MEMORY_SIZE='your value'
-   exit and save file
-   ```
+3. **일반 구성 편집**:
 
-4. **Set Memory Allocation for DataNode**:
+```bash
+sudo nano iotdb-common.properties
+set cluster_name=defaultCluster
+set schema_replication_factor=<숫자> // 예를 들어 3
+set data_replication_factor=<숫자> // 예를 들어 2
+종료하고 파일 저장
+```
 
-   ```bash
-   sudo nano datanode-env.sh
-   set MEMORY_SIZE='your value'
-   exit and save file
-   ```
+4. **ConfigNode에 대한 메모리 할당 설정**:
 
-5. **Edit Configuration for ConfigNode**:
+```bash
+sudo nano confignode-env.sh
+set MEMORY_SIZE='사용자 값'
+종료하고 파일 저장
+```
 
-   ```bash
-   sudo nano iotdb-confignode.properties
-   set cn_internal_address=<name/ip of machine> // for example one of node-1
-   set cn_seed_config_node=<name/ip of machine>:<10710> // for example, node-1:10710
-   exit and save file
-   ```
+5. **DataNode에 대한 메모리 할당 설정**:
 
-6. **Edit Configuration for DataNode**:
+```bash
+sudo nano datanode-env.sh
+set MEMORY_SIZE='사용자 값'
+종료하고 파일 저장
+```
 
-   ```bash
-   sudo nano iotdb-datanode.properties
-   set dn_rpc_address=0.0.0.0
-   set dn_internal_address=<name/ip of machine> // for example one of node-1
-   set dn_seed_config_node=<name/ip of machine>:<10710> // for example, node-1:10710
-   exit and save file
-   ```
+6. **ConfigNode에 대한 구성 편집**:
 
-#### b. Launch IoTDB Single-Node
+```bash
+sudo nano iotdb-confignode.properties
+set cn_internal_address=<머신의 이름/IP> // 예를 들어 node-1 | node-2 | node3
+set cn_seed_config_node=<name/ip of main machine>:<10710> // 예를 들어, node-1:10710(모든 노드에서 동일해야 함)
+종료하고 파일 저장
+```
 
-1. **Start IoTDB**:
+7. **DataNode 구성 편집**:
 
-   ```bash
-   sh $IOTDB_HOME/sbin/start-standalone.sh
-   ```
+```bash
+sudo nano iotdb-datanode.properties
+set dn_rpc_address=0.0.0.0
+set dn_internal_address=<name/ip of machine> // 예를 들어, node-1 | node-2 | node3
+set dn_seed_config_node=<name/ip of main machine>:<10710> // 예를 들어, node-1:10710(모든 노드에서 동일해야 함)
+종료하고 파일 저장
+```
 
-2. **Check IoTDB Requirements Satisfaction**:
+8. **호스트 파일 구성**(각 서버에서):
 
-   ```bash
-   sh $IOTDB_HOME/sbin/health_check.sh -ips <node-1>
-   ```
+- `/etc/hosts`를 엽니다.
 
-3. **Access IoTDB CLI**:
+```bash
+sudo nano /etc/hosts
+```
 
-   ```bash
-   sh $IOTDB_HOME/sbin/start-cli.sh
-   ```
+- 모든 클러스터 노드에 대한 항목을 추가합니다.
 
-   _Note_: Use `exit` to quit the CLI.
+```plaintext
+192.168.1.1 node-1
+192.168.1.2 node-2
+192.168.1.3 node-3
+```
 
-### 5. Configure and Launch IoTDB Cluster
+- 저장하고 종료합니다.
 
-#### a. Cluster Configuration
+9. **구성 배포**:
 
-1. **Navigate to IoTDB Configuration Directory**:
+- 모든 클러스터 노드에 동일한 구성이 있는지 확인합니다.
+- 필요한 경우 USB를 사용하여 고유한 구성 파일을 전송합니다.
 
-   ```bash
-   cd $IOTDB_HOME/conf/
-   ```
+#### b. IoTDB 클러스터 시작
 
-2. **Edit Configuration for Cluster**":
+1. **구성 노드 시작**:
 
-   ```bash
-   sudo nano iotdb-cluster.properties
-   set confignode_address_list=<list of config nodes> // for example, node-1, node-2, node-3
-   set datanode_address_list=<list of data nodes> // for example, node-1, node-2, node-3
-   set confignode_deploy_path=<path/to/iotdb/data> // for example, /opt/iotdb/data
-   set datanode_deploy_path=<path/to/iotdb/data> // for example, /opt/iotdb/data
-   exit and save file
-   ```
+먼저 기본 구성 노드를 시작하여 시드 구성 노드 노드가 먼저 시작되도록 한 다음, 두 번째 및 세 번째 구성 노드 노드를 순서대로 시작합니다.
 
-3. **Edit Common Configuration**:
+각 Config Node 서버에서:
 
-   ```bash
-   sudo nano iotdb-common.properties
-   set cluster_name=defaultCluster
-   set schema_replication_factor=<number> // for example, 3
-   set data_replication_factor=<number> // for example, 2
-   exit and save file
-   ```
+```bash
+./$IOTDB_CLUSTER_HOME/sbin/start-confignode.sh
+```
 
-4. **Set Memory Allocation for ConfigNode**:
+2. **데이터 노드 시작**:
 
-   ```bash
-   sudo nano confignode-env.sh
-   set MEMORY_SIZE='your value'
-   exit and save file
-   ```
+각 데이터 노드 서버에서:
 
-5. **Set Memory Allocation for DataNode**:
+```bash
+./$IOTDB_CLUSTER_HOME/sbin/start-datanode.sh
+```
 
-   ```bash
-   sudo nano datanode-env.sh
-   set MEMORY_SIZE='your value'
-   exit and save file
-   ```
+3. **IoTDB 요구 사항 충족 확인**:
 
-6. **Edit Configuration for ConfigNode**:
+```bash
+./$IOTDB_HOME/sbin/health_check.sh -ips <node-1>
+```
 
-   ```bash
-   sudo nano iotdb-confignode.properties
-   set cn_internal_address=<name/ip of machine> // for example one of node-1 | node-2 | node3
-   set cn_seed_config_node=<name/ip of main machine>:<10710> // for example, node-1:10710 (should be same on all nodes)
-   exit and save file
-   ```
+4. **IoTDB CLI 액세스**:
 
-7. **Edit Configuration for DataNode**:
+```bash
+./$IOTDB_HOME/sbin/start-cli.sh
+```
 
-   ```bash
-   sudo nano iotdb-datanode.properties
-   set dn_rpc_address=0.0.0.0
-   set dn_internal_address=<name/ip of machine> // for example one of node-1 | node-2 | node3
-   set dn_seed_config_node=<name/ip of main machine>:<10710> // for example, node-1:10710 (should be same on all nodes)
-   exit and save file
-   ```
+_참고_: `exit`를 사용하여 CLI를 종료합니다.
 
-8. **Configure Hosts File** (on each server):
+## 설치 후 확인
 
-   - Open `/etc/hosts`:
+1. **서비스 상태 확인**:
 
-     ```bash
-     sudo nano /etc/hosts
-     ```
+- 모든 IoTDB 서비스가 활성화되어 있는지 확인합니다.
 
-   - Add entries for all cluster nodes:
+```bash
+ps -aux | grep java
+```
 
-     ```plaintext
-     192.168.1.1 node-1
-     192.168.1.2 node-2
-     192.168.1.3 node-3
-     ```
+2. **테스트 데이터 수집 및 쿼리**:
 
-   - Save and exit.
+- IoTDB CLI를 사용하여 테스트 데이터베이스를 만들고, 데이터를 삽입하고, 쿼리를 수행합니다.
 
-9. **Distribute Configuration**:
+```sql
+CREATE DATABASE root.test;
+INSERT INTO root.test.d1(timestamp, value) VALUES(1, 100);
+SELECT * FROM root.test.d1;
+```
 
-   - Ensure that the same configuration is present on all cluster nodes.
-   - Use the USB to transfer any unique configuration files if necessary.
+3. **로그 검토**:
 
-#### b. Launch IoTDB Cluster
+- IoTDB 로그에서 오류나 경고를 확인합니다.
 
-1. **Start Config Nodes**:
+```bash
+tail -f $IOTDB_HOME/logs/<needed-log-file>.log
+```
 
-   Start the main confignode first, ensuring that the seed confignode node starts first, and then start the second and third confignode nodes in sequence.
+## 문제 해결
 
-   On each Config Node server:
+- **Java를 찾을 수 없음**:
 
-   ```bash
-   ./$IOTDB_CLUSTER_HOME/sbin/start-confignode.sh
-   ```
+- `JAVA_HOME`이 올바르게 설정되어 내보내졌는지 확인합니다.
+- Java 설치 경로를 확인합니다.
 
-2. **Start Data Nodes**:
+- **IoTDB 서비스 시작 실패**:
 
-   On each Data Node server:
+- 오류 메시지에 대한 로그 파일을 확인합니다.
+- 필수 포트가 열려 있고 사용 중이 아닌지 확인합니다.
+- `conf` 폴더에서 적절한 구성을 확인합니다.
 
-   ```bash
-   ./$IOTDB_CLUSTER_HOME/sbin/start-datanode.sh
-   ```
+- **클러스터 노드가 통신하지 않음**:
 
-3. **Check IoTDB Requirements Satisfaction**:
+- 서버 간 네트워크 연결을 확인합니다.
+- 정확성을 위해 `/etc/hosts` 항목을 확인합니다.
+- 모든 노드에서 일관된 구성을 확인합니다.
 
-   ```bash
-   sh $IOTDB_HOME/sbin/health_check.sh -ips <node-1>
-   ```
+- **권한 문제**:
+- IoTDB 디렉터리에 적절한 읽기/쓰기 권한이 있는지 확인합니다.
+- 충분한 권한으로 시작 스크립트를 실행합니다.
 
-4. **Access IoTDB CLI**:
+## Apache IoTDB 공식 배포 가이드
 
-   ```bash
-   sh $IOTDB_HOME/sbin/start-cli.sh
-   ```
-
-   _Note_: Use `exit` to quit the CLI.
-
-## Post-Installation Verification
-
-1. **Check Service Status**:
-
-   - Ensure all IoTDB services are active.
-
-     ```bash
-     ps -aux | grep java
-     ```
-
-2. **Test Data Ingestion and Querying**:
-
-   - Use IoTDB CLI to create a test database, insert data, and perform queries.
-
-     ```sql
-     CREATE DATABASE root.test;
-     INSERT INTO root.test.d1(timestamp, value) VALUES(1, 100);
-     SELECT * FROM root.test.d1;
-     ```
-
-3. **Review Logs**:
-
-   - Check IoTDB logs for any errors or warnings.
-
-     ```bash
-     tail -f $IOTDB_HOME/logs/<needed-log-file>.log
-     ```
-
-## Troubleshooting
-
-- **Java Not Found**:
-
-  - Ensure `JAVA_HOME` is correctly set and exported.
-  - Verify Java installation path.
-
-- **IoTDB Service Fails to Start**:
-
-  - Check log files for error messages.
-  - Verify that required ports are open and not in use.
-  - Ensure proper configurations in `conf` folder.
-
-- **Cluster Nodes Not Communicating**:
-
-  - Verify network connectivity between servers.
-  - Check `/etc/hosts` entries for accuracy.
-  - Ensure consistent configuration across all nodes.
-
-- **Permission Issues**:
-  - Ensure that IoTDB directories have appropriate read/write permissions.
-  - Run startup scripts with sufficient privileges.
-
-## Apache IoTDB Official Deployment Guide
-
-- [Stand-Alone Deployment](https://iotdb.apache.org/UserGuide/latest/Deployment-and-Maintenance/Stand-Alone-Deployment_apache.html)
-- [Cluster Deployment](https://iotdb.apache.org/UserGuide/latest/Deployment-and-Maintenance/Cluster-Deployment_apache.html)
+- [독립 실행형 배포](https://iotdb.apache.org/UserGuide/latest/Deployment-and-Maintenance/Stand-Alone-Deployment_apache.html)
+- [클러스터 배포](https://iotdb.apache.org/UserGuide/latest/Deployment-and-Maintenance/Cluster-Deployment_apache.html)

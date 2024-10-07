@@ -291,19 +291,19 @@ This guide provides step-by-step instructions to install and configure **Apache 
 1. **Start IoTDB**:
 
    ```bash
-   sh $IOTDB_HOME/sbin/start-standalone.sh
+   ./$IOTDB_HOME/sbin/start-standalone.sh
    ```
 
 2. **Check IoTDB Requirements Satisfaction**:
 
    ```bash
-   sh $IOTDB_HOME/sbin/health_check.sh -ips <node-1>
+   ./$IOTDB_HOME/sbin/health_check.sh -ips <node-1>
    ```
 
 3. **Access IoTDB CLI**:
 
    ```bash
-   sh $IOTDB_HOME/sbin/start-cli.sh
+   ./$IOTDB_HOME/sbin/start-cli.sh
    ```
 
    _Note_: Use `exit` to quit the CLI.
@@ -420,13 +420,13 @@ This guide provides step-by-step instructions to install and configure **Apache 
 3. **Check IoTDB Requirements Satisfaction**:
 
    ```bash
-   sh $IOTDB_HOME/sbin/health_check.sh -ips <node-1>
+   ./$IOTDB_HOME/sbin/health_check.sh -ips <node-1>
    ```
 
 4. **Access IoTDB CLI**:
 
    ```bash
-   sh $IOTDB_HOME/sbin/start-cli.sh
+   ./$IOTDB_HOME/sbin/start-cli.sh
    ```
 
    _Note_: Use `exit` to quit the CLI.
