@@ -33,7 +33,7 @@ Welcome to the home repository of KREPS, a hub for projects developed by Aleksei
      </a>
    </p>
 
-2. **IoTDB-Redis Connector**: This repository contains tools for integrating Redis with IoTDB. It includes a project for generating real-time data and writing it to Redis, and another project for reading data from Redis and writing it to IoTDB using Spark.
+2. **IoTDB-Redis Connector**: This repository contains a high-performance Java application for integrating Redis with Apache IoTDB. It includes tools for asynchronously fetching real-time data from Redis, processing it through a common queue, and efficiently writing it to IoTDB using a pool of writer threads.
 
    <p>
      <a href="https://github.com/NutonFlash/iotdb-redis-connector">
